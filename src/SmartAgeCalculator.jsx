@@ -190,8 +190,7 @@ const SmartAgeCalculator = () => {
     if (showWarning) return;
     
     const handleMouseMove = (e) => {
-      // Add cursor trail
-      const trailId = Date.now();
+      const trailId = Date.now() + Math.random();
       setCursorTrails(prev => [...prev, {
         id: trailId,
         x: e.clientX,
@@ -214,8 +213,7 @@ const SmartAgeCalculator = () => {
     if (showWarning) return;
     
     const cursorInterval = setInterval(() => {
-      if (Math.random() > 0.5) {
-        const cursorId = Date.now();
+        const cursorId = Date.now() + Math.random();
         setFakeCursors(prev => [...prev, {
           id: cursorId,
           x: Math.random() * window.innerWidth,
@@ -242,8 +240,8 @@ const SmartAgeCalculator = () => {
         ...cursor,
         x: Math.max(0, Math.min(window.innerWidth, cursor.x + cursor.vx)),
         y: Math.max(0, Math.min(window.innerHeight, cursor.y + cursor.vy)),
-        vx: cursor.x <= 0 || cursor.x >= window.innerWidth ? -cursor.vx : cursor.vx,
-        vy: cursor.y <= 0 || cursor.y >= window.innerHeight ? -cursor.vy : cursor.vy
+        vx: (cursor.x <= 0 || cursor.x >= window.innerWidth) ? -cursor.vx : cursor.vx,
+        vy: (cursor.y <= 0 || cursor.y >= window.innerHeight) ? -cursor.vy : cursor.vy
       })));
     }, 50);
 
@@ -270,7 +268,7 @@ const SmartAgeCalculator = () => {
     
     const downloadInterval = setInterval(() => {
       if (Math.random() > 0.6) {
-        const downloadId = Date.now();
+        const downloadId = Date.now() + Math.random();
         setFakeDownloads(prev => [...prev, {
           id: downloadId,
           progress: 0,
@@ -338,7 +336,7 @@ const SmartAgeCalculator = () => {
     
     const iconInterval = setInterval(() => {
       if (Math.random() > 0.5) {
-        const iconId = Date.now();
+        const iconId = Date.now() + Math.random();
         const randomImage = backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
         
         setFloatingIcons(prev => [...prev, {
@@ -425,7 +423,7 @@ const SmartAgeCalculator = () => {
       const alertInterval = setInterval(() => {
         if (Math.random() > 0.7) {
           const randomAlert = fakeAlertMessages[Math.floor(Math.random() * fakeAlertMessages.length)];
-          const alertId = Date.now();
+          const alertId = Date.now() + Math.random();
           setFakeAlerts(prev => [...prev, { id: alertId, message: randomAlert }]);
           
           setTimeout(() => {
@@ -546,6 +544,8 @@ const SmartAgeCalculator = () => {
   ];
 
   const handleCalculate = () => {
+    console.log('Button clicked!', { age });
+    
     if (!age || age.trim() === '') {
       alert("NICE TRY, FBI. NHẬP TUỔI VÀO ĐI!");
       return;
@@ -553,6 +553,8 @@ const SmartAgeCalculator = () => {
 
     const numAge = parseInt(age);
     const isNaN = isNaN(numAge);
+    
+    console.log('Parsed age:', numAge, 'isNaN:', isNaN);
     
     // Check for special cases first
     if (isNaN) {
@@ -963,11 +965,12 @@ const SmartAgeCalculator = () => {
       >
         {/* Scan Line Effect */}
         <div 
-          className="absolute inset-0 pointer-events-none z-50"
+          className="absolute inset-0 pointer-events-none"
           style={{
             background: 'linear-gradient(to bottom, transparent 0%, rgba(57,255,20,0.1) 50%, transparent 100%)',
             animation: 'scanLine 3s linear infinite',
-            height: '2px'
+            height: '2px',
+            zIndex: 1
           }}
         />
 
@@ -1002,8 +1005,7 @@ const SmartAgeCalculator = () => {
               background: i % 2 === 0 ? '#39ff14' : '#ff00ff',
               borderRadius: '50%',
               boxShadow: `0 0 10px ${i % 2 === 0 ? '#39ff14' : '#ff00ff'}`,
-              animation: `particleFloat ${3 + Math.random() * 2}s ease-in-out infinite`,
-              animationDelay: `${i * 0.3}s`,
+              animation: `particleFloat ${3 + Math.random() * 2}s ease-in-out ${i * 0.3}s infinite`,
               '--tx': `${(Math.random() - 0.5) * 200}px`,
               '--ty': `${(Math.random() - 0.5) * 200}px`
             }}
@@ -1011,7 +1013,7 @@ const SmartAgeCalculator = () => {
         ))}
 
         {/* Content Wrapper */}
-        <div className="relative z-10">
+        <div className="relative" style={{ zIndex: 100, position: 'relative' }}>
         <div className="relative flex items-center justify-center mb-8">
           <img 
             src={mainIcon} 
@@ -1020,7 +1022,7 @@ const SmartAgeCalculator = () => {
             style={{ filter: 'drop-shadow(0 0 10px rgba(57,255,20,0.8))' }}
           />
           <h1 className={`text-5xl md:text-7xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-lime-400 to-pink-500 font-['Comic_Sans_MS'] animate-pulse drop-shadow-[0_0_10px_rgba(57,255,20,0.8)] ${glitchText ? 'glitch-text' : ''}`}>
-            MÁY TÍNH TUỔI (CỰC) THÔNG MINH
+            QUANTUM-NEURAL-AGE-PREDICTOR
           </h1>
           <img 
             src="/secondary-icon.jpg" 
@@ -1034,21 +1036,57 @@ const SmartAgeCalculator = () => {
         </div>
 
         {!loading && !result && (
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-6" style={{ position: 'relative', zIndex: 100 }}>
             <div className="relative group">
+              {/* Decorative Elements Around Input */}
+              <div className="absolute -top-8 left-0 right-0 flex justify-between pointer-events-none">
+                <Skull size={32} className="text-lime-500 animate-pulse" />
+                <AlertTriangle size={32} className="text-pink-500 animate-pulse" />
+                <Lock size={32} className="text-yellow-400 animate-pulse" />
+              </div>
+              
               <label className="text-lime-500 text-xl font-bold mb-2 block animate-blink relative">
                 &gt; HÃY NHẬP SỐ NĂM BẠN ĐÃ TỒN TẠI TRÊN ĐỜI NÀY:
                 <span className="absolute -right-2 top-0 text-pink-500 animate-pulse">⚠️</span>
+                <span className="absolute left-0 top-0 text-red-500 animate-bounce">💀</span>
               </label>
-              <input
-                type="text"
-                value={age}
-                onChange={(e) => setAge(e.target.value)}
-                className="w-full bg-black border-4 border-lime-500 text-pink-500 text-6xl p-4 focus:outline-none focus:border-pink-500 focus:shadow-[0_0_20px_#ff00ff] transition-all font-['Courier_New'] text-center"
-                placeholder="???"
-              />
-              <div className="absolute -right-4 -top-4 text-pink-500 animate-bounce">
+              
+              {/* Input with More Decorations */}
+              <div className="relative" style={{ zIndex: 150, position: 'relative' }}>
+                <input
+                  type="text"
+                  value={age}
+                  onChange={(e) => setAge(e.target.value)}
+                  className="w-full bg-black border-4 border-lime-500 text-pink-500 text-6xl p-4 focus:outline-none focus:border-pink-500 focus:shadow-[0_0_30px_#ff00ff,0_0_60px_#ff00ff] transition-all font-['Courier_New'] text-center"
+                  placeholder="???"
+                  style={{
+                    boxShadow: 'inset 0 0 20px rgba(57,255,20,0.3), 0 0 20px rgba(255,0,255,0.2)',
+                    position: 'relative',
+                    zIndex: 150,
+                    pointerEvents: 'auto',
+                    isolation: 'isolate'
+                  }}
+                />
+                
+                {/* Animated Border Around Input */}
+                <div className="absolute inset-0 border-4 border-pink-500 animate-pulse pointer-events-none" style={{ 
+                  boxShadow: '0 0 20px rgba(255,0,255,0.6)',
+                  zIndex: 5
+                }}></div>
+                
+                {/* Corner Decorations */}
+                <div className="absolute -top-2 -left-2 w-6 h-6 border-t-2 border-l-2 border-lime-500" style={{ animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}></div>
+                <div className="absolute -top-2 -right-2 w-6 h-6 border-t-2 border-r-2 border-pink-500" style={{ animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) 0.5s infinite' }}></div>
+                <div className="absolute -bottom-2 -left-2 w-6 h-6 border-b-2 border-l-2 border-pink-500" style={{ animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) 1s infinite' }}></div>
+                <div className="absolute -bottom-2 -right-2 w-6 h-6 border-b-2 border-r-2 border-lime-500" style={{ animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) 1.5s infinite' }}></div>
+              </div>
+              
+              {/* Multiple Icons Around Input */}
+              <div className="absolute -right-6 -top-4 text-pink-500" style={{ animation: 'bounce 1s infinite' }}>
                 <Skull size={48} />
+              </div>
+              <div className="absolute -left-6 -top-4 text-lime-500" style={{ animation: 'bounce 1s 0.3s infinite' }}>
+                <AlertTriangle size={40} />
               </div>
               <img 
                 src={mainIcon} 
@@ -1056,19 +1094,71 @@ const SmartAgeCalculator = () => {
                 className="absolute -left-4 -bottom-4 w-12 h-12 animate-spin opacity-70"
                 style={{ filter: 'drop-shadow(0 0 10px rgba(255,0,255,0.8))' }}
               />
+              <img 
+                src={backgroundImages.length > 0 ? backgroundImages[0] : mainIcon} 
+                alt="icon" 
+                className="absolute -right-4 -bottom-4 w-10 h-10 animate-spin opacity-60"
+                style={{ 
+                  filter: 'drop-shadow(0 0 10px rgba(57,255,20,0.8))',
+                  animationDirection: 'reverse',
+                  animationDuration: '2s'
+                }}
+              />
+              
+              {/* Floating Warning Text */}
+              <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-red-500 text-xs font-bold animate-blink">
+                ⚠️ CẢNH BÁO: HỆ THỐNG NGUY HIỂM ⚠️
+              </div>
             </div>
 
-            <button
-              onClick={handleCalculate}
-              className="group relative bg-pink-600 hover:bg-pink-500 text-white text-3xl font-bold py-6 px-8 border-4 border-white shadow-[8px_8px_0px_0px_#000000] active:shadow-none active:translate-x-2 active:translate-y-2 transition-all hover:animate-shake font-['Comic_Sans_MS'] uppercase tracking-widest overflow-hidden"
-            >
-              <span className="relative z-10 flex items-center justify-center gap-4">
-                <Terminal size={32} />
-                BẮT ĐẦU TÍNH TOÁN
+            <div className="relative" style={{ zIndex: 200, position: 'relative' }}>
+              {/* Decorative Icons Around Button - Outside */}
+              <div className="absolute -left-8 top-1/2 transform -translate-y-1/2 text-red-500 animate-spin pointer-events-none" style={{ animationDuration: '3s', zIndex: 1 }}>
+                <Skull size={40} />
+              </div>
+              <div className="absolute -right-8 top-1/2 transform -translate-y-1/2 text-yellow-400 animate-spin pointer-events-none" style={{ animationDuration: '3s', animationDirection: 'reverse', zIndex: 1 }}>
+                <Skull size={40} />
+              </div>
+              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-8 text-pink-500 animate-bounce pointer-events-none" style={{ zIndex: 1 }}>
                 <AlertTriangle size={32} />
-              </span>
-              <div className="absolute inset-0 bg-lime-500 transform -translate-x-full group-hover:translate-x-0 transition-transform duration-200 opacity-50"></div>
-            </button>
+              </div>
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-8 text-lime-500 pointer-events-none" style={{ animation: 'bounce 1s 0.5s infinite', zIndex: 1 }}>
+                <Lock size={32} />
+              </div>
+
+              {/* Main Button - Simple and Clickable */}
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  console.log('Button onClick triggered!', { age });
+                  handleCalculate();
+                }}
+                className="relative w-full bg-gradient-to-r from-blue-600 via-red-600 to-blue-600 hover:from-blue-700 hover:via-red-700 hover:to-blue-700 text-white text-2xl md:text-3xl font-bold py-6 px-8 border-4 border-white shadow-[0_0_30px_rgba(0,0,255,0.8),8px_8px_0px_0px_#000000] active:shadow-none active:translate-x-2 active:translate-y-2 transition-all hover:animate-shake font-['Comic_Sans_MS'] uppercase tracking-widest"
+                style={{
+                  animation: 'borderGlow 2s ease-in-out infinite',
+                  boxShadow: '0 0 30px rgba(0,0,255,0.8), 0 0 60px rgba(255,0,0,0.6), 8px 8px 0px 0px #000000',
+                  position: 'relative',
+                  zIndex: 300,
+                  pointerEvents: 'auto',
+                  cursor: 'pointer',
+                  isolation: 'isolate',
+                  WebkitTapHighlightColor: 'transparent'
+                }}
+              >
+                {/* Simple Background Effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-red-600 to-blue-600 opacity-75 animate-pulse pointer-events-none" style={{ zIndex: 1 }}></div>
+                
+                {/* Button Text - Clickable Area */}
+                <span className="relative z-50 flex items-center justify-center gap-4" style={{ pointerEvents: 'none', userSelect: 'none' }}>
+                  <Terminal size={32} className="animate-pulse" />
+                  <span className="relative">
+                    🔗 KẾT NỐI TỚI CIA 🔗
+                  </span>
+                  <AlertTriangle size={32} className="animate-pulse" />
+                </span>
+              </button>
+            </div>
           </div>
         )}
 
